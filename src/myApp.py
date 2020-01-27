@@ -89,3 +89,21 @@ def index():
 if __name__ == "__main__":
     app.run()
 
+q = """
+{
+  rooms {
+    pin
+    usernames
+    songs {
+      title
+      url
+      likes
+    }
+  }
+  songs {
+    title
+    url
+    likes
+  }
+}
+"""

@@ -11,6 +11,11 @@ class Song:
         self.likes = likes
 
 
+class Playlist:
+    def __init__(self):
+        self.songs = SortedList([], key=lambda song: 1 / (1 + song.likes))
+
+
 def to_graphene_song(song):
     return SongDto(title=song.title, url=song.url, likes=song.likes)
 

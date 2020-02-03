@@ -1,12 +1,7 @@
 import graphene
 from apiUtils.schemaObjects import SongDto
-from common.songManager import (
-    Song,
-    to_graphene_song,
-    append_song,
-    get_songs,
-    remove_song,
-)
+from common.roomManager import get_specific_room, room_dict
+from common.songManager import Playlist, Song
 
 
 class PutSong(graphene.Mutation):
@@ -15,32 +10,37 @@ class PutSong(graphene.Mutation):
 
     # arguments that can be passed in to the mutation
     class Arguments:
+        pin = graphene.String()
         title = graphene.String()
         url = graphene.String()
+        company = graphene.String(required=False, default_value="YOUTUBE")
 
     # function that resolves the mutation
-    def mutate(self, info, title, url):
+    def mutate(self, info, pin, title, url, company):
         # if info.context.get("is_vip"):
         # username = username.upper()
-        append_song(Song(url=url, title=title))
-        return PutSong(map(to_graphene_song, get_songs()))
+        player = get_specific_room(pin).playlist
+        player.append_song(Song(url=url, title=title, company=company))
+        return PutSong(player.get_graphene_songs())
 
 
 class LikeSong(graphene.Mutation):
     songs = graphene.Field(graphene.List(SongDto))
 
     class Arguments:
+        pin = graphene.String()
         title = graphene.String()
 
-    def mutate(self, info, title):
-        for song in get_songs():
+    def mutate(self, info, pin, title):
+        player = get_specific_room(pin).playlist
+        for song in player.get_songs():
             if song.title == title:
                 # unfortunately there is no update => remove and then add it back in
-                remove_song(song)
+                player.remove_song(song)
                 song.likes += 1
-                append_song(song)
+                player.append_song(song)
                 break
-        return LikeSong(map(to_graphene_song, get_songs()))
+        return LikeSong(player.get_graphene_songs())
 
 
 class Mutation(graphene.ObjectType):
@@ -48,10 +48,10 @@ class Mutation(graphene.ObjectType):
     like_song = LikeSong.Field()
 
 
-# mutation { putSong (title: "t3", url: "u5") { songs { title url likes } }}
+# mutation { putSong (title: "t4", url: "u5", pin:"1111") { songs { title url likes } }}
 
 # mutation {
-#   likeSong(title: "t2") {
+#   likeSong(title: "t4", pin:"1111") {
 #     songs {
 #       title
 #       url
@@ -59,4 +59,3 @@ class Mutation(graphene.ObjectType):
 #     }
 #   }
 # }
-

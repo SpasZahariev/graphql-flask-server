@@ -1,7 +1,7 @@
 import graphene
 from apiUtils.schemaObjects import SongDto
 from apiUtils.schemaObjects import RoomDto
-from common.songManager import my_songs
+from common.songManager import Playlist, Song
 from random import randint
 
 
@@ -13,7 +13,9 @@ class Room:
 
 
 def to_graphene_room(room):
-    return RoomDto(pin=room.pin, usernames=room.usernames, songs=room.songs)
+    return RoomDto(
+        pin=room.pin, usernames=room.usernames, songs=room.playlist.get_graphene_songs()
+    )
 
 
 # throws stopIteration if pin is not there
@@ -32,4 +34,11 @@ def create_room():
 
 
 room_dict = {}
-room_dict["1111"] = Room(["Spas", "Mac", "Zack"], my_songs, "1111")
+room_dict["1111"] = Room(["Spas", "Mac", "Zack"], Playlist(), "1111")
+room_dict["1111"].playlist.append_song(
+    Song(title="You give love a bad name", url="asdfasdfgzlxczv94")
+)
+room_dict["1111"].playlist.append_song(
+    Song(title="Mick Gordon - Inferno", url="asdf4fdsadf", likes=666)
+)
+

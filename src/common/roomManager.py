@@ -1,4 +1,5 @@
 import graphene
+import namesgenerator
 from apiUtils.schemaObjects import SongDto
 from apiUtils.schemaObjects import RoomDto
 from common.songManager import Playlist, Song
@@ -34,7 +35,16 @@ def create_room():
 
 
 room_dict = {}
-room_dict["1111"] = Room(["Spas", "Mac", "Zack"], Playlist(), "1111")
+room_dict["1111"] = Room(
+    [
+        "Spas",
+        namesgenerator.get_random_name(),
+        namesgenerator.get_random_name(),
+        namesgenerator.get_random_name(),
+    ],
+    Playlist(),
+    "1111",
+)
 room_dict["1111"].playlist.append_song(
     Song(title="You give love a bad name", url="asdfasdfgzlxczv94")
 )

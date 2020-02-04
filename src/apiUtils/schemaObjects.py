@@ -5,6 +5,7 @@ class SongDto(graphene.ObjectType):
     title = graphene.String()
     url = graphene.String()
     likes = graphene.Int()
+    username = graphene.String()
     company = graphene.String()
 
 

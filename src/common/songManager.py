@@ -4,18 +4,23 @@ from apiUtils.schemaObjects import SongDto
 from sortedcontainers import SortedList
 from common.brandType import Brand
 
-
+# user is the person who added the song
 class Song:
-    def __init__(self, url, title="blank", company="YOUTUBE", likes=0):
+    def __init__(self, url, title="blank", company="YOUTUBE", username="Host", likes=0):
         self.title = title
         self.url = url
         self.likes = likes
+        self.username = username
         self.company = Brand.YOUTUBE if company != "SPOTIFY" else Brand.SPOTIFY
 
 
 def to_graphene_song(song):
     return SongDto(
-        title=song.title, url=song.url, likes=song.likes, company=song.company.value
+        title=song.title,
+        url=song.url,
+        likes=song.likes,
+        username=song.username,
+        company=song.company.value,
     )
 
 

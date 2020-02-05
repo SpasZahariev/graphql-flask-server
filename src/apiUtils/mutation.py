@@ -3,8 +3,11 @@ import namesgenerator
 from apiUtils.schemaObjects import SongDto
 from common.roomManager import get_specific_room, room_dict
 from common.songManager import Playlist, Song
-from flask_socketio import emit
-import json
+from flask_socketio import SocketIO, emit
+import jsonpickle
+import __main__
+
+# from __main__ import socketio
 
 
 class PutSong(graphene.Mutation):
@@ -28,7 +31,9 @@ class PutSong(graphene.Mutation):
             Song(url=url, title=title, company=company, username=username)
         )
         # socket io emitting to everybody in room
-        emit("playlist_channel", json.dumps(player.get_songs(), indent=4))
+        __main__.socketio.emit(
+            "playlist_channel", jsonpickle.encode(player.get_songs())
+        )
         # emit("playlist_channel", {"data": message["data"]}, broadcast=True)
         return PutSong(player.get_graphene_songs())
 
@@ -50,7 +55,9 @@ class LikeSong(graphene.Mutation):
                 player.append_song(song)
                 break
         # socket io emitting to everybody in room
-        emit("playlist_channel", json.dumps(player.get_songs(), indent=4))
+        __main__.socketio.emit(
+            "playlist_channel", jsonpickle.encode("player.get_songs()")
+        )
         return LikeSong(player.get_graphene_songs())
 
 
@@ -66,7 +73,7 @@ class AddUser(graphene.Mutation):
         room.usernames.append(namesgenerator.get_random_name())
 
         # socket io emitting to everybody in room
-        emit("usernames_channel", json.dumps(room.usernames, indent=4))
+        __main__.socketio.emit("usernames_channel", jsonpickle.encode(room.usernames))
         return AddUser(room.usernames)
 
 

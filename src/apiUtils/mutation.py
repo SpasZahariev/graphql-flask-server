@@ -3,6 +3,8 @@ import namesgenerator
 from apiUtils.schemaObjects import SongDto
 from common.roomManager import get_specific_room, room_dict
 from common.songManager import Playlist, Song
+from flask_socketio import emit
+import json
 
 
 class PutSong(graphene.Mutation):
@@ -25,6 +27,9 @@ class PutSong(graphene.Mutation):
         player.append_song(
             Song(url=url, title=title, company=company, username=username)
         )
+        # socket io emitting to everybody in room
+        emit("playlist_channel", json.dumps(player.get_songs(), indent=4))
+        # emit("playlist_channel", {"data": message["data"]}, broadcast=True)
         return PutSong(player.get_graphene_songs())
 
 
@@ -44,6 +49,8 @@ class LikeSong(graphene.Mutation):
                 song.likes += 1
                 player.append_song(song)
                 break
+        # socket io emitting to everybody in room
+        emit("playlist_channel", json.dumps(player.get_songs(), indent=4))
         return LikeSong(player.get_graphene_songs())
 
 
@@ -57,6 +64,9 @@ class AddUser(graphene.Mutation):
     def mutate(self, info, pin):
         room = get_specific_room(pin)
         room.usernames.append(namesgenerator.get_random_name())
+
+        # socket io emitting to everybody in room
+        emit("usernames_channel", json.dumps(room.usernames, indent=4))
         return AddUser(room.usernames)
 
 
@@ -67,6 +77,8 @@ class Mutation(graphene.ObjectType):
 
 
 # mutation { putSong (title: "t4", url: "u5", pin:"1111") { songs { title url likes } }}
+# mutation { putSong (title: "t4", url: "u5", pin:"1111", username: "guy", company:"SPOTIFY") { songs { title url likes username company} }}
+
 
 # mutation {
 #   likeSong(title: "t4", pin:"1111") {

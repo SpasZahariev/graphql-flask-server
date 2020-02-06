@@ -4,7 +4,7 @@ from apiUtils.schemaObjects import SongDto
 from common.roomManager import get_specific_room, room_dict
 from common.songManager import Playlist, Song
 from flask_socketio import SocketIO, emit
-import jsonpickle
+import json
 import __main__
 
 # from __main__ import socketio
@@ -32,7 +32,7 @@ class PutSong(graphene.Mutation):
         )
         # socket io emitting to everybody in room
         __main__.socketio.emit(
-            "playlist_channel", jsonpickle.encode(player.get_songs())
+            "playlist_channel", json.dumps(player.get_serialized_songs(), indent=4)
         )
         # emit("playlist_channel", {"data": message["data"]}, broadcast=True)
         return PutSong(player.get_graphene_songs())
@@ -56,7 +56,7 @@ class LikeSong(graphene.Mutation):
                 break
         # socket io emitting to everybody in room
         __main__.socketio.emit(
-            "playlist_channel", jsonpickle.encode("player.get_songs()")
+            "playlist_channel", json.dumps(player.get_serialized_songs(), indent=4)
         )
         return LikeSong(player.get_graphene_songs())
 
@@ -73,7 +73,9 @@ class AddUser(graphene.Mutation):
         room.usernames.append(namesgenerator.get_random_name())
 
         # socket io emitting to everybody in room
-        __main__.socketio.emit("usernames_channel", jsonpickle.encode(room.usernames))
+        __main__.socketio.emit(
+            "usernames_channel", json.dumps(room.usernames), indent=4
+        )
         return AddUser(room.usernames)
 
 

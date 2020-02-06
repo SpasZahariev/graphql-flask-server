@@ -20,7 +20,7 @@ def to_graphene_song(song):
         url=song.url,
         likes=song.likes,
         username=song.username,
-        company=song.company.value,
+        company=song.company,
     )
 
 
@@ -44,6 +44,9 @@ class Playlist:
 
     def get_songs(self):
         return self.songs
+
+    def get_serialized_songs(self):
+        return list(map(lambda x: x.__dict__, self.songs))
 
     # def get_sorted_songs():
     #     return my_songs.sort(key=lambda song: song.likes)

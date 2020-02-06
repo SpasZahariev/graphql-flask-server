@@ -12,6 +12,13 @@ class Room:
         self.playlist = playlist
         self.pin = pin
 
+    def get_serialized_room(self):
+        return {
+            "pin": self.pin,
+            "usernames": self.usernames,
+            "playlist": self.playlist.get_serialized_songs(),
+        }
+
 
 def to_graphene_room(room):
     return RoomDto(
@@ -43,7 +50,7 @@ room_dict["1111"] = Room(
         namesgenerator.get_random_name(),
     ],
     Playlist(),
-    "1111",
+    pin="1111",
 )
 room_dict["1111"].playlist.append_song(
     Song(title="You give love a bad name", url="asdfasdfgzlxczv94")
@@ -52,3 +59,7 @@ room_dict["1111"].playlist.append_song(
     Song(title="Mick Gordon - Inferno", url="asdf4fdsadf", likes=666)
 )
 
+# import json
+
+# print(room_dict["1111"].get_serialized_room())
+# print(json.dumps(room_dict["1111"].get_serialized_room(), indent=4))

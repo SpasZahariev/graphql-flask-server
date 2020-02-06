@@ -9,3 +9,7 @@ var socket = io.connect("http://" + document.domain + ":" + location.port);
 socket.on("playlist_channel", function(msg) {
   console.log(msg);
 });
+
+socket.on("usernames_channel", function(msg) {
+  console.log(msg);
+});

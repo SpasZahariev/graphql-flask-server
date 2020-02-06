@@ -1,9 +1,15 @@
 import graphene
 import namesgenerator
-from apiUtils.schemaObjects import SongDto
-from common.roomManager import get_specific_room, room_dict
+from apiUtils.schemaObjects import SongDto, RoomDto
+from common.roomManager import (
+    get_specific_room,
+    create_room,
+    to_graphene_room,
+    reset_rooms,
+)
 from common.songManager import Playlist, Song
 from flask_socketio import SocketIO, emit
+from random import randint
 import json
 import __main__
 
@@ -79,10 +85,23 @@ class AddUser(graphene.Mutation):
         return AddUser(room.usernames)
 
 
+class PutRoom(graphene.Mutation):
+    room = graphene.Field(RoomDto)
+
+    class Arguments:
+        clear = graphene.Boolean(required=False, default_value=False)
+
+    def mutate(self, info, clear):
+        if clear:
+            reset_rooms()
+        return PutRoom(to_graphene_room(create_room()))
+
+
 class Mutation(graphene.ObjectType):
     put_song = PutSong.Field()
     like_song = LikeSong.Field()
     add_user = AddUser.Field()
+    put_room = PutRoom.Field()
 
 
 # mutation { putSong (title: "t4", url: "u5", pin:"1111") { songs { title url likes } }}
@@ -95,6 +114,22 @@ class Mutation(graphene.ObjectType):
 #       title
 #       url
 #       likes
+#     }
+#   }
+# }
+
+
+# mutation {
+# 	putRoom {
+#     room {
+#       usernames
+#       pin
+#       songs {
+#         title
+#         url
+#         likes
+#         company
+#       }
 #     }
 #   }
 # }

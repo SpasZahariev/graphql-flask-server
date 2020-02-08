@@ -44,6 +44,22 @@ class PutSong(graphene.Mutation):
         return PutSong(player.get_graphene_songs())
 
 
+class DequeueSong(graphene.Mutation):
+    songs = graphene.Field(graphene.List(SongDto))
+
+    class Arguments:
+        pin = graphene.String()
+        first = graphene.Int(required=False, default_value=1)
+
+    def mutate(self, info, pin, first):
+        player = get_specific_room(pin).playlist
+        player.dequeue(first)
+        __main__.socketio.emit(
+            "playlist_channel", json.dumps(player.get_serialized_songs(), indent=4)
+        )
+        return DequeueSong(player.get_graphene_songs())
+
+
 class LikeSong(graphene.Mutation):
     songs = graphene.Field(graphene.List(SongDto))
 
@@ -53,13 +69,7 @@ class LikeSong(graphene.Mutation):
 
     def mutate(self, info, pin, title):
         player = get_specific_room(pin).playlist
-        for song in player.get_songs():
-            if song.title == title:
-                # unfortunately there is no update => remove and then add it back in
-                player.remove_song(song)
-                song.likes += 1
-                player.append_song(song)
-                break
+        player.like_song(title)
         # socket io emitting to everybody in room
         __main__.socketio.emit(
             "playlist_channel", json.dumps(player.get_serialized_songs(), indent=4)
@@ -99,6 +109,7 @@ class PutRoom(graphene.Mutation):
 
 class Mutation(graphene.ObjectType):
     put_song = PutSong.Field()
+    dequeue_song = DequeueSong.Field()
     like_song = LikeSong.Field()
     add_user = AddUser.Field()
     put_room = PutRoom.Field()

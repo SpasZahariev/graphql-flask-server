@@ -32,15 +32,24 @@ class Playlist:
     def get_graphene_songs(self):
         return map(to_graphene_song, self.songs)
 
-    def pop_sorted_songs(self):
-        self.songs.pop(0)
-        return songs
+    def dequeue_songs(self, first=1):
+        del self.songs[:first]
+        return self.songs
 
     def append_song(self, song):
         self.songs.add(song)
 
     def remove_song(self, song):
         self.songs.remove(song)
+
+    def like_song(self, title):
+        for song in self.songs:
+            if song.title == title:
+                # unfortunately there is no update => remove and then add it back in
+                self.remove_song(song)
+                song.likes += 1
+                self.append_song(song)
+                break
 
     def get_songs(self):
         return self.songs

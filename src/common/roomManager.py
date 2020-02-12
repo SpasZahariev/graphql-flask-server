@@ -9,7 +9,7 @@ from sortedcontainers import SortedList
 
 class Room:
     def __init__(
-        self, pin="0000", usernames=[], playlist=Playlist(),
+        self, pin="0000", usernames=["Host"], playlist=Playlist(),
     ):
         self.pin = pin
         self.usernames = usernames
@@ -47,7 +47,7 @@ def create_room():
     random_pin = str(randint(0, 9999))
     while random_pin in room_dict:
         # in case I am running out of memory
-        if len(room_dict) > 5000:
+        if len(room_dict) > 1000:
             reset_rooms()
         random_pin = str(randint(0, 9999))
     room_dict[random_pin] = Room(pin=random_pin)

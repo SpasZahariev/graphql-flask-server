@@ -6,10 +6,16 @@ from flask_graphql import GraphQLView
 from apiUtils.query import Query
 from apiUtils.mutation import Mutation
 from flask_socketio import SocketIO, emit
+from flask_cors import CORS
 
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 app = Flask(__name__)
+# this is the simplest Cors solution - it will enable All paths and All origins
+CORS(app)
+# for something more fine grained use
+# CORS(app, resources={r"/api/*": {"origins": "*"}})
+
 app.debug = True
 
 

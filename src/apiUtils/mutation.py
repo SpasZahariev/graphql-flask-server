@@ -78,7 +78,7 @@ class LikeSong(graphene.Mutation):
 
 
 class AddUser(graphene.Mutation):
-    usernames = graphene.Field(graphene.List(graphene.String))
+    username = graphene.Field(graphene.String)
 
     class Arguments:
         pin = graphene.String()
@@ -92,7 +92,7 @@ class AddUser(graphene.Mutation):
         __main__.socketio.emit(
             "usernames_channel", json.dumps(room.usernames), indent=4
         )
-        return AddUser(room.usernames)
+        return AddUser(room.usernames[-1])
 
 
 class PutRoom(graphene.Mutation):

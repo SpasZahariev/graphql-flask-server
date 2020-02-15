@@ -23,8 +23,11 @@ class Query(graphene.ObjectType):
     def resolve_rooms(self, info):
         return map(to_graphene_room, get_room_values())
 
+    # whenever this is called a user will join the room
     def resolve_room(self, info, pin):
-        return to_graphene_room(get_specific_room(pin))
+        target_room = get_specific_room(pin)
+        target_room.create_user()
+        return to_graphene_room(target_room)
 
 
 # query {

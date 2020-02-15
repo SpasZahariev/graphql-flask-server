@@ -1,5 +1,6 @@
 import graphene
-import namesgenerator
+
+# import namesgenerator
 from apiUtils.schemaObjects import SongDto, RoomDto
 from common.roomManager import (
     get_specific_room,
@@ -86,13 +87,13 @@ class AddUser(graphene.Mutation):
     # function that resolves the mutation
     def mutate(self, info, pin):
         room = get_specific_room(pin)
-        room.usernames.append(namesgenerator.get_random_name())
+        username = room.create_user()
 
         # socket io emitting to everybody in room
         __main__.socketio.emit(
             "usernames_channel", json.dumps(room.usernames), indent=4
         )
-        return AddUser(room.usernames[-1])
+        return AddUser(username)
 
 
 class PutRoom(graphene.Mutation):

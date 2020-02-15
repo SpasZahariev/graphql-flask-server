@@ -22,6 +22,11 @@ class Room:
             "playlist": self.playlist.get_serialized_songs(),
         }
 
+    def create_user(self):
+        username = namesgenerator.get_random_name()
+        self.usernames.append(username)
+        return username
+
 
 def to_graphene_room(room):
     return RoomDto(

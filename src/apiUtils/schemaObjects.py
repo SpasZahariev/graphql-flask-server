@@ -10,6 +10,6 @@ class SongDto(graphene.ObjectType):
 
 
 class RoomDto(graphene.ObjectType):
-    pin = graphene.Int()
+    pin = graphene.String()
     usernames = graphene.List(graphene.String)
     songs = graphene.List(SongDto)

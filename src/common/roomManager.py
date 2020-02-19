@@ -55,6 +55,10 @@ def create_room():
         if len(room_dict) > 1000:
             reset_rooms()
         random_pin = str(randint(0, 9999))
+
+    # prepend with zeros if pin is less than 4 symbols
+    random_pin = ("0" * (4 - len(random_pin))) + random_pin
+
     room_dict[random_pin] = Room(pin=random_pin)
     return room_dict[random_pin]
 

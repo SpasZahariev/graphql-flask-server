@@ -1,19 +1,20 @@
+from random import randint
+
 import graphene
 import namesgenerator
-from apiUtils.schemaObjects import SongDto
-from apiUtils.schemaObjects import RoomDto
+from apiUtils.schemaObjects import RoomDto, SongDto
 from common.songManager import Playlist, Song
-from random import randint
 from sortedcontainers import SortedList
 
 
+room_dict = {}
+
+
 class Room:
-    def __init__(
-        self, pin="0000", usernames=["Host"], playlist=Playlist(),
-    ):
+    def __init__(self, pin="0000"):
         self.pin = pin
-        self.usernames = usernames
-        self.playlist = playlist
+        self.usernames = ["Host"]
+        self.playlist = Playlist()
 
     def get_serialized_room(self):
         return {
@@ -67,23 +68,22 @@ def reset_rooms():
     room_dict = {}
 
 
-room_dict = {}
-room_dict["1111"] = Room(
-    pin="1111",
-    usernames=[
-        "Spas",
-        namesgenerator.get_random_name(),
-        namesgenerator.get_random_name(),
-        namesgenerator.get_random_name(),
-    ],
-    playlist=Playlist(),
-)
-room_dict["1111"].playlist.append_song(
-    Song(title="You give love a bad name", url="asdfasdfgzlxczv94")
-)
-room_dict["1111"].playlist.append_song(
-    Song(title="Mick Gordon - Inferno", url="asdf4fdsadf", likes=666)
-)
+# room_dict["1111"] = Room(
+#     pin="1111",
+#     usernames=[
+#         "Spas",
+#         namesgenerator.get_random_name(),
+#         namesgenerator.get_random_name(),
+#         namesgenerator.get_random_name(),
+#     ],
+#     playlist=Playlist(),
+# )
+# room_dict["1111"].playlist.append_song(
+#     Song(title="You give love a bad name", url="asdfasdfgzlxczv94")
+# )
+# room_dict["1111"].playlist.append_song(
+#     Song(title="Mick Gordon - Inferno", url="asdf4fdsadf", likes=666)
+# )
 
 # import json
 

@@ -26,6 +26,7 @@ class Query(graphene.ObjectType):
     # whenever this is called a user will join the room
     def resolve_room(self, info, pin):
         target_room = get_specific_room(pin)
+        # if target_room = NoneType throw error back to client (room with this pin does not exist)
         target_room.create_user()
         return to_graphene_room(target_room)
 

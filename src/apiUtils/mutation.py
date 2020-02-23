@@ -54,7 +54,7 @@ class DequeueSong(graphene.Mutation):
 
     def mutate(self, info, pin, first):
         player = get_specific_room(pin).playlist
-        player.dequeue(first)
+        player.dequeue_songs(first=first)
         __main__.socketio.emit(
             "playlist_channel", json.dumps(player.get_serialized_songs(), indent=4)
         )

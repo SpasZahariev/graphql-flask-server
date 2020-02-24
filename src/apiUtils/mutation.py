@@ -9,8 +9,8 @@ from common.roomManager import (
     reset_rooms,
 )
 from common.songManager import Playlist, Song
-from flask_socketio import SocketIO, emit
 from random import randint
+from flask_socketio import SocketIO, emit
 import json
 import __main__
 
@@ -91,7 +91,7 @@ class AddUser(graphene.Mutation):
 
         # socket io emitting to everybody in room
         __main__.socketio.emit(
-            "usernames_channel", json.dumps(room.usernames), indent=4
+            "usernames_channel", json.dumps(room.usernames, indent=4)
         )
         return AddUser(username)
 

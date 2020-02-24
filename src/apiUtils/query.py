@@ -6,6 +6,9 @@ from common.roomManager import (
     to_graphene_room,
     get_specific_room,
 )
+from flask_socketio import SocketIO, emit
+import json
+import __main__
 
 # from common.songManager import Playlist Song, to_graphene_song
 
@@ -28,6 +31,10 @@ class Query(graphene.ObjectType):
         target_room = get_specific_room(pin)
         # if target_room = NoneType throw error back to client (room with this pin does not exist)
         target_room.create_user()
+
+        __main__.socketio.emit(
+            "usernames_channel", json.dumps(target_room.usernames, indent=4)
+        )
         return to_graphene_room(target_room)
 
 

@@ -28,6 +28,9 @@ class Room:
         self.usernames.append(username)
         return username
 
+    def remove_user(self, username):
+        self.usernames.remove(username)
+
 
 def to_graphene_room(room):
     return RoomDto(

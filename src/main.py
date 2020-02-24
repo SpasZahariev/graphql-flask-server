@@ -47,12 +47,12 @@ def index():
 
 
 @socketio.on("connect")
-def test_connect():
+def handle_connect():
     print("A client has connected")
 
 
 @socketio.on("disconnect")
-def test_disconnect():
+def handle_disconnect():
     print("One client disconnected")
 
 

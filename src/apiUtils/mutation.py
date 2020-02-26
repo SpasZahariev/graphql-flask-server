@@ -11,8 +11,10 @@ from common.roomManager import (
 from common.songManager import Playlist, Song
 from random import randint
 from flask_socketio import SocketIO, emit
-import json
-import __main__
+
+# import json
+# import __main__
+from apiUtils.socket_methods import emit_playlist, emit_usernames
 
 # from __main__ import socketio
 
@@ -38,9 +40,8 @@ class PutSong(graphene.Mutation):
             Song(url=url, title=title, company=company, username=username)
         )
         # socket io emitting to everybody in room
-        __main__.socketio.emit(
-            "playlist_channel", json.dumps(player.get_serialized_songs(), indent=4)
-        )
+        emit_playlist(player.get_serialized_songs())
+
         # emit("playlist_channel", {"data": message["data"]}, broadcast=True)
         return PutSong(player.get_graphene_songs())
 
@@ -55,9 +56,8 @@ class DequeueSong(graphene.Mutation):
     def mutate(self, info, pin, first):
         player = get_specific_room(pin).playlist
         player.dequeue_songs(first=first)
-        __main__.socketio.emit(
-            "playlist_channel", json.dumps(player.get_serialized_songs(), indent=4)
-        )
+        emit_playlist(player.get_serialized_songs())
+
         return DequeueSong(player.get_graphene_songs())
 
 
@@ -72,9 +72,8 @@ class LikeSong(graphene.Mutation):
         player = get_specific_room(pin).playlist
         player.like_song(title)
         # socket io emitting to everybody in room
-        __main__.socketio.emit(
-            "playlist_channel", json.dumps(player.get_serialized_songs(), indent=4)
-        )
+        emit_playlist(player.get_serialized_songs())
+
         return LikeSong(player.get_graphene_songs())
 
 
@@ -90,9 +89,7 @@ class AddUser(graphene.Mutation):
         username = room.create_user()
 
         # socket io emitting to everybody in room
-        __main__.socketio.emit(
-            "usernames_channel", json.dumps(room.usernames, indent=4)
-        )
+        emit_usernames(room.usernames)
         return AddUser(username)
 
 

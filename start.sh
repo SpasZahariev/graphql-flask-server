@@ -9,7 +9,7 @@ if [$OPEN_PORT -e ''];then
 fi
 
 
-gunicorn --bind 0.0.0.0:$OPEN_PORT main:app
+gunicorn --bind 0.0.0.0:$OPEN_PORT --worker-class eventlet -w 1 --log-level debug main:app
 
 #use this for windows
 # gunicorn --bind 0.0.0.0:5000 main:app

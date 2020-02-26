@@ -7,8 +7,10 @@ from common.roomManager import (
     get_specific_room,
 )
 from flask_socketio import SocketIO, emit
-import json
-import __main__
+
+# import json
+# import __main__
+from apiUtils.socket_methods import emit_usernames
 
 # from common.songManager import Playlist Song, to_graphene_song
 
@@ -28,13 +30,14 @@ class Query(graphene.ObjectType):
 
     # whenever this is called a user will join the room
     def resolve_room(self, info, pin):
+        print("attemptin to join room with pin: ", pin)
+
         target_room = get_specific_room(pin)
         # if target_room = NoneType throw error back to client (room with this pin does not exist)
         target_room.create_user()
 
-        __main__.socketio.emit(
-            "usernames_channel", json.dumps(target_room.usernames, indent=4)
-        )
+        emit_usernames(target_room.usernames)
+
         return to_graphene_room(target_room)
 
 

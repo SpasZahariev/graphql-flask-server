@@ -39,17 +39,18 @@ class Playlist:
     def append_song(self, song):
         self.songs.add(song)
 
+    def get_specific_song(self, title):
+        return next(song for song in self.songs if song.title == title)
+
     def remove_song(self, song):
         self.songs.remove(song)
 
     def like_song(self, title):
-        for song in self.songs:
-            if song.title == title:
-                # unfortunately there is no update => remove and then add it back in
-                self.remove_song(song)
-                song.likes += 1
-                self.append_song(song)
-                break
+        song = self.get_specific_song(title)
+        # unfortunately there is no update => remove and then add it back in
+        self.remove_song(song)
+        song.likes += 1
+        self.append_song(song)
 
     def get_songs(self):
         return self.songs

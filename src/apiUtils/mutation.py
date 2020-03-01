@@ -61,6 +61,22 @@ class DequeueSong(graphene.Mutation):
         return DequeueSong(player.get_graphene_songs())
 
 
+class RemoveSong(graphene.Mutation):
+    songs = graphene.Field(graphene.List(SongDto))
+
+    class Arguments:
+        pin = graphene.String()
+        title = graphene.String()
+
+    def mutate(self, info, pin, title):
+        player = get_specific_room(pin).playlist
+        song = player.get_specific_song(title)
+        player.remove_song(song)
+        emit_playlist(player.get_serialized_songs())
+
+        return RemoveSong(player.get_graphene_songs())
+
+
 class LikeSong(graphene.Mutation):
     songs = graphene.Field(graphene.List(SongDto))
 
@@ -108,6 +124,7 @@ class PutRoom(graphene.Mutation):
 class Mutation(graphene.ObjectType):
     put_song = PutSong.Field()
     dequeue_song = DequeueSong.Field()
+    remove_song = RemoveSong.Field()
     like_song = LikeSong.Field()
     add_user = AddUser.Field()
     put_room = PutRoom.Field()

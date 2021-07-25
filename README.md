@@ -3,7 +3,7 @@
 <img src="./nqme-homepage.png">
 
 ## Links
-- **Live application:** [NQME](http://nqme.co.uk) or [Link when domain name expires] (http://nqme.co.uk.s3-website.eu-west-2.amazonaws.com)
+- **Live application:** [NQME](http://nqme.co.uk) or [Link when domain name expires](http://nqme.co.uk.s3-website.eu-west-2.amazonaws.com)
 - Backend API hosted on Heroku Dyno: [NQME GraphQL API](https://nqme-graphql.herokuapp.com/graphql?query=query%7B%0A%20%20rooms%20%7B%0A%20%20%20%20pin%0A%20%20%20%20usernames%0A%20%20%20%20songs%20%7B%0A%20%20%20%20%20%20title%0A%20%20%20%20%20%20url%0A%20%20%20%20%20%20likes%0A%20%20%20%20%20%20username%0A%20%20%20%20%20%20company%0A%20%20%20%20%7D%0A%20%20%7D%0A%7D)
 - Python backend repository: [Backend Source Code](https://github.com/SpasZahariev/graphql-flask-server)
 - React frontend repository: [Frontend Source Code](https://github.com/SpasZahariev/nqme-react)

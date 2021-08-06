@@ -45,3 +45,5 @@
 <img src="./many-users.png">
 <img src="./empty-room.png">
 
+## Credits: Shout-out to my friends for the initial idea
+### Ivo, Atanas, Šarūnas, Bogdan, Octavian, and last but not least Alex!
